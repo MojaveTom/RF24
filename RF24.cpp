@@ -435,6 +435,7 @@ void RF24::print_address_register(const char* name, uint8_t reg, uint8_t qty)
 RF24::RF24(uint16_t _cepin, uint16_t _cspin):
   ce_pin(_cepin), csn_pin(_cspin), p_variant(false),
   payload_size(32), dynamic_payloads_enabled(false), addr_width(5),csDelay(5)//,pipe0_reading_address(0)
+  , waitDelay(300)
 {
   pipe0_reading_address[0]=0;
 }
@@ -824,7 +825,7 @@ void RF24::errNotify(){
 /******************************************************************/
 
 //Similar to the previous write, clears the interrupt flags
-uint32_t RF24::write( const void* buf, uint8_t len, const bool multicast , uint32_t waitDelay )
+uint32_t RF24::write( const void* buf, uint8_t len, const bool multicast)
 //  bool RF24::write( const void* buf, uint8_t len, const bool multicast )
 {
 	//Start Writing

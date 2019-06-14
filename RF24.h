@@ -225,7 +225,8 @@ public:
    * radio.stopListening();
    * radio.write(&data,sizeof(data));
    * @endcode
-   * @return True if the payload was delivered successfully and an ACK was received, or upon successfull transmission if auto-ack is disabled.
+   * @return >0 if the payload was delivered successfully and an ACK was received, or upon successfull transmission if auto-ack is disabled.
+   *         ==0 otherwise.  Code can test return value as a boolean where ==0 +> False or failure.
    */
   uint32_t write( const void* buf, uint8_t len );
 
@@ -375,7 +376,7 @@ s   *
   * @param len Number of bytes to be sent
   * @param multicast Request ACK (0), NOACK (1)
   */
-  uint32_t write( const void* buf, uint8_t len, const bool multicast , uint32_t waitDelay = 300 );
+  uint32_t write( const void* buf, uint8_t len, const bool multicast);
   //bool write( const void* buf, uint8_t len, const bool multicast, uint32_t waitDelay = 300 );
 
   /**
@@ -955,6 +956,21 @@ s   *
   */
 
   uint32_t csDelay;
+
+  /**
+  *
+  * The driver will delay for this duration between successive tests for completion
+  * of transmitting a packet.
+  *
+  *    On some configurations, the while loop that tests for DX_TS or MAX_RT
+  * consumes so much processor that the test for DX_TS never succeeds and every
+  * write times out on MAX_RT.  delayMicroseconds(waitDelay)in the loop allows
+  * DX_TS to succeed.
+  *
+  * Default:  300, works well on ESP8266 and avr 328P.
+  */
+
+  uint32_t waitDelay;
 
   /**@}*/
   /**
