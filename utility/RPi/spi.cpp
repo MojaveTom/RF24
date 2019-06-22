@@ -1,6 +1,7 @@
 #include "spi.h"
 #include <pthread.h>
 #include <unistd.h>
+#include <stdexcept>
 
 static pthread_mutex_t spiMutex = PTHREAD_MUTEX_INITIALIZER;
 bool bcmIsInitialized = false;
@@ -21,7 +22,7 @@ void SPI::begin( int busNo ) {
 
 void SPI::beginTransaction(SPISettings settings){
 	if (geteuid() != 0){
-		throw -1;
+		throw std::runtime_error("Must be \"root\" to access SPI.");
 	}
 	pthread_mutex_lock (&spiMutex);
 	setBitOrder(settings.border);
